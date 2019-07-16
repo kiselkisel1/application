@@ -1,10 +1,13 @@
 package com.example.application.controller;
 
+ import com.example.application.exceptions.ThereIsNoSuchArtistException;
  import com.example.application.model.Artist;
+ import com.example.application.repository.ArtistRepository;
  import com.example.application.service.ArtistService;
  import com.example.application.validator.ArtistValidator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.http.ResponseEntity;
  import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +19,8 @@ public class ArtistController {
     @Autowired
     ArtistService artistService;
 
+    @Autowired
+    ArtistRepository artistRepository;
     @Autowired
     ArtistValidator artistValidator;
 
@@ -29,10 +34,19 @@ public class ArtistController {
 //        return artist;
 //    }
 
-    @GetMapping("{id}")
-    public Artist getUsersById(@PathVariable Long id){
-        return artistService.getOne(id);
-    }
+//    @GetMapping("{id}")
+//    public ResponseEntity<Artist> getUsersById(@PathVariable Long id)
+//    {
+//        Artist artist = artistService.getOne(id);
+//        return ResponseEntity.ok().body(artist);
+//    }
+@GetMapping("{id}")
+public ResponseEntity<Artist> getUsersById(@PathVariable Long id)
+        throws ThereIsNoSuchArtistException {
+    Artist artist=artistRepository.findById(id)
+            .orElseThrow(() -> new ThereIsNoSuchArtistException());
+    return ResponseEntity.ok().body(artist);
+}
 
     @PostMapping
     public Artist create(@RequestBody Artist artist){
