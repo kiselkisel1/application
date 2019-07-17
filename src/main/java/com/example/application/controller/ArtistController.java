@@ -1,11 +1,13 @@
 package com.example.application.controller;
 
+ import com.example.application.exceptions.ResourceNotFoundException;
  import com.example.application.model.Artist;
  import com.example.application.service.ArtistService;
   import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
  import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.validation.BindingResult;
  import org.springframework.web.bind.annotation.*;
 
  import javax.validation.Valid;
@@ -31,7 +33,8 @@ public class ArtistController {
     }
 
     @PostMapping
-    public Artist create(@RequestBody @Valid Artist artist){
+    public Artist create(@RequestBody @Valid Artist artist ){
+
         return artistService.save(artist);
     }
 

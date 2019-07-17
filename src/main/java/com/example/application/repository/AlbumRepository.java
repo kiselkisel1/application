@@ -1,4 +1,10 @@
 package com.example.application.repository;
 
-public interface AlbumRepository {
+import com.example.application.model.Album;
+import com.example.application.model.Genre;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AlbumRepository extends JpaRepository<Album,Integer> {
 }

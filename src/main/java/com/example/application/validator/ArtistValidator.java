@@ -1,5 +1,6 @@
 package com.example.application.validator;
 
+import com.example.application.exceptions.ResourceNotFoundException;
 import com.example.application.model.Artist;
 import com.example.application.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,11 @@ public class ArtistValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Artist artist=(Artist)o;
+
         Calendar now = Calendar.getInstance();
         int year = now.get(Calendar.YEAR);
         if(artist.getStartActivityYear()<1900 || artist.getEndActivityYear()>year){
-            errors.rejectValue("yearValidate", "Incorrect year interval");
+            throw new ResourceNotFoundException("year");
         }
 
     }
