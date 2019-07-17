@@ -7,8 +7,7 @@ import java.util.List;
 public interface ArtistService {
 
     List<Artist> getAll();
-    Artist getOne(Long id);
-    Artist add(Artist artist);
-    Artist update(Artist artist);
+    Artist getOne(Integer id);
+    Artist save(Artist artist);
     void delete(Artist artist);
 }

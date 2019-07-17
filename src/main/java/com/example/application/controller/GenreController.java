@@ -2,10 +2,12 @@ package com.example.application.controller;
 
 import com.example.application.model.Genre;
 import com.example.application.repository.GenreRepository;
+import com.example.application.service.GenreService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -13,33 +15,36 @@ import java.util.List;
 public class GenreController {
 
     @Autowired
-    GenreRepository genreRepository;
+    GenreService genreService;
 
     @GetMapping
     public List<Genre> getAllGenres() {
-        return genreRepository.findAll();
+        return genreService.getAll();
     }
 
     @GetMapping("{id}")
-    public Genre getOne(@PathVariable("id") Genre genre){
-        return genre;
+    public Genre getGenreById(@PathVariable("id")  Integer id){
+        return  genreService.getOne(id);
     }
 
     @PostMapping
-    public Genre create(@RequestBody Genre genre){
+    public Genre create(@RequestBody @Valid Genre genre){
 
-        return genreRepository.save(genre);
+        return genreService.save(genre);
     }
 
     @PutMapping("{id}")
-    public Genre update(@PathVariable("id") Genre genreFromDb,
+    public Genre update(@PathVariable("id") Integer id,
                         //spring из тела запроса(json) сам разбирает данные и кладет их в обьект типа artist
-                        @RequestBody Genre genreFromUser ){
-        BeanUtils.copyProperties(genreFromUser,genreFromDb,"id");
-        return genreRepository.save(genreFromDb);
+                        @RequestBody @Valid Genre genreFromUser ){
+        Genre genre =genreService.getOne(id);
+        BeanUtils.copyProperties(genreFromUser,genre,"id");
+        return genreService.save(genre);
     }
+
     @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") Genre genre) {
-        genreRepository.delete(genre);
+    public void delete(@PathVariable("id") Integer id) {
+        Genre genre =genreService.getOne(id);
+        genreService.delete(genre);
     }
 }

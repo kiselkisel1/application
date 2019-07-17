@@ -1,68 +1,55 @@
 package com.example.application.controller;
 
- import com.example.application.exceptions.ThereIsNoSuchArtistException;
  import com.example.application.model.Artist;
- import com.example.application.repository.ArtistRepository;
  import com.example.application.service.ArtistService;
- import com.example.application.validator.ArtistValidator;
-import org.springframework.beans.BeanUtils;
+  import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.http.ResponseEntity;
  import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+ import javax.validation.Valid;
+ import java.util.List;
 
 @RestController
 @RequestMapping("artists")
 public class ArtistController {
 
-    @Autowired
-    ArtistService artistService;
+    private static final Logger logger = LoggerFactory.getLogger(Artist.class);
 
     @Autowired
-    ArtistRepository artistRepository;
-    @Autowired
-    ArtistValidator artistValidator;
+    ArtistService artistService;
 
     @GetMapping
     public List<Artist> getAllArtists() {
         return artistService.getAll();
 }
 
-//    @GetMapping("{id}")
-//    public Artist getOne(@PathVariable("id") Artist artist){
-//        return artist;
-//    }
-
-//    @GetMapping("{id}")
-//    public ResponseEntity<Artist> getUsersById(@PathVariable Long id)
-//    {
-//        Artist artist = artistService.getOne(id);
-//        return ResponseEntity.ok().body(artist);
-//    }
-@GetMapping("{id}")
-public ResponseEntity<Artist> getUsersById(@PathVariable Long id)
-        throws ThereIsNoSuchArtistException {
-    Artist artist=artistRepository.findById(id)
-            .orElseThrow(() -> new ThereIsNoSuchArtistException());
-    return ResponseEntity.ok().body(artist);
-}
+    @GetMapping("{id}")
+    public Artist getArtistById(@PathVariable Integer id) {
+        return artistService.getOne(id);
+    }
 
     @PostMapping
-    public Artist create(@RequestBody Artist artist){
-        return artistService.add(artist);
+    public Artist create(@RequestBody @Valid Artist artist){
+        return artistService.save(artist);
     }
 
     @PutMapping("{id}")
-    public Artist update(@PathVariable("id") Artist artistFromDb,
-                         //spring из тела запроса(json) сам разбирает данные и кладет их в обьект типа artist
-                         @RequestBody Artist artistFromUser ){
-        BeanUtils.copyProperties(artistFromUser,artistFromDb,"id");
+    public Artist update(@PathVariable("id") Integer id,
+                         @RequestBody @Valid Artist artistFromUser ){
+        logger.debug("id "+id+" = artistFromUser "+artistFromUser.toString() );
 
-        return artistService.update(artistFromDb);
+        Artist artist=artistService.getOne(id);
+        BeanUtils.copyProperties(artistFromUser,artist,"id");
+        return artistService.save(artist);
     }
+
+
+
     @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") Artist artist) {
+    public void delete(@PathVariable("id") Integer id) {
+        Artist artist=artistService.getOne(id);
         artistService.delete(artist);
     }
 
