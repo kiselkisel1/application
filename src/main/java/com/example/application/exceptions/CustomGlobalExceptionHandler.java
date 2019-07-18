@@ -17,7 +17,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<CustomErrorResponse> customHandleNotFound(Exception ex, WebRequest request) {
-
         CustomErrorResponse errors = new CustomErrorResponse(LocalDateTime.now(),HttpStatus.NOT_FOUND.value(),ex.getMessage());
         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
     }
@@ -40,4 +39,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
          return new ResponseEntity(errors, status);
     }
 
-}
+
+    }
+

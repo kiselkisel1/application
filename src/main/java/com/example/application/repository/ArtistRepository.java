@@ -12,9 +12,12 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public interface ArtistRepository extends JpaRepository<Artist, Integer>, JpaSpecificationExecutor<Artist> {
+public interface ArtistRepository extends JpaRepository<Artist, Integer> {
 
     @Query("select b from Artist b where b.name = :name or b.startActivityYear <= :year and b.endActivityYear >= :year or b.genres = :genres")
-    List<Artist> filter(@RequestParam("name") String name,@RequestParam("year") int year,@RequestParam("genres") Integer[]genres);
+    List<Artist> filter(@RequestParam("name") String name,@RequestParam("year") int year,@RequestParam("genres") Integer[] genres);
+
+    @Query("select b from Artist b where b.genres = :genres")
+    List<Artist> filterByGenres(@RequestParam("genres") Integer[] genres);
 
 }

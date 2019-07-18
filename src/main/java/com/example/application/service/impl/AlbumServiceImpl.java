@@ -6,6 +6,8 @@ import com.example.application.repository.AlbumRepository;
 import com.example.application.repository.ArtistRepository;
 import com.example.application.repository.GenreRepository;
 import com.example.application.service.AlbumService;
+import com.example.application.service.ArtistService;
+import com.example.application.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +22,10 @@ public class AlbumServiceImpl implements AlbumService {
     AlbumRepository albumRepository;
 
    @Autowired
-    ArtistRepository artistRepository;
+    ArtistService artistService;
 
    @Autowired
-    GenreRepository genreRepository;
+    GenreService genreService;
 
     @Override
     public List<Album> getAll() {
@@ -38,13 +40,12 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     public Album save(Album album) {
+
         for(Integer id:album.getGenres()){
-            genreRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("GENRE_DOES_NOT_EXIST"));
+           genreService.getOne(id);
         }
         for(Integer id:album.getArtists()){
-            artistRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("ARTIST_DOES_NOT_EXIST"));
+            artistService.getOne(id);
         }
         return albumRepository.save(album);
     }
@@ -52,5 +53,15 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public void delete(Album album) {
         albumRepository.delete(album);
+    }
+
+    @Override
+    public List<Album> filter(String name, int year) {
+        return albumRepository.filter(name,year);
+    }
+
+    @Override
+    public List<Album> getAlbums(Integer artistId) {
+        return albumRepository.getAlbumsWithArtist(artistId);
     }
 }

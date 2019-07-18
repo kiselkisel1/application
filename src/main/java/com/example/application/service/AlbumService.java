@@ -10,4 +10,6 @@ public interface AlbumService {
     Album getOne(Integer id);
     Album save(Album album);
     void delete(Album album);
+    List<Album> filter( String name, int year);
+    List<Album>getAlbums(Integer artistId);
 }

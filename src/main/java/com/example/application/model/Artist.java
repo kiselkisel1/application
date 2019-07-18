@@ -1,10 +1,13 @@
 package com.example.application.model;
 
+import com.example.application.utils.CurrentYear;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.omg.CORBA.INTERNAL;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Arrays;
@@ -26,9 +29,11 @@ public class Artist {
     @Size(max=2000,message = "Notes should contain less than 2000 symbols")
     private String notes;
 
-     private int startActivityYear;
+    @Min(1900)
+    private int startActivityYear;
 
-     private int endActivityYear;
+    @Min(1900)
+    private int endActivityYear;
 
     private  Integer[] genres;
 
@@ -47,7 +52,6 @@ public class Artist {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-
 
     public String getName() {
         return name;

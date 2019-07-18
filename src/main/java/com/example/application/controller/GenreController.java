@@ -1,5 +1,6 @@
 package com.example.application.controller;
 
+import com.example.application.model.Artist;
 import com.example.application.model.Genre;
 import com.example.application.repository.GenreRepository;
 import com.example.application.service.GenreService;
@@ -47,4 +48,11 @@ public class GenreController {
         Genre genre =genreService.getOne(id);
         genreService.delete(genre);
     }
+
+//    @GetMapping("/filter")
+//    public  List<Genre> filter(@RequestParam("name") String name,
+//                                @RequestParam("year") int year) {
+//
+//        return artistService.filter(name,year);
+//    }
 }

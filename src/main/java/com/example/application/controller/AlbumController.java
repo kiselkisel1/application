@@ -46,4 +46,11 @@ public class AlbumController {
         Album album=albumService.getOne(id);
         albumService.delete(album);
     }
+
+    @GetMapping("/filter")
+    public  List<Album> filter(@RequestParam("name") String name,
+                                @RequestParam("year") int year) {
+
+        return albumService.filter(name,year);
+    }
 }
